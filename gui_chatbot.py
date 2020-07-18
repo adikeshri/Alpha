@@ -3,7 +3,7 @@ from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 import pickle
 import numpy as np
-
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
 import html5lib
@@ -16,8 +16,7 @@ words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
 
 
-def doAction(tag):
-    
+
 def clean_up_sentence(sentence):
     # tokenize the pattern - splitting words into array
     sentence_words = nltk.word_tokenize(sentence)
@@ -80,11 +79,13 @@ def send():
 
         ints = predict_class(msg)
         res = getResponse(ints, intents)
-
         ChatBox.insert(END, "Bot: " + res + '\n\n')
-
+        engine=pyttsx3.init()
+        engine.setProperty('rate', 150)
         ChatBox.config(state=DISABLED)
         ChatBox.yview(END)
+        engine.say(res)
+        engine.runAndWait()
 
 
 root = Tk()
