@@ -1,3 +1,4 @@
+import speech_recognition as sr
 import nltk
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
@@ -11,9 +12,32 @@ from keras.models import load_model
 model = load_model('chatbot_model.h5')
 import json
 import random
+import spacy
+from pygame import mixer
+import subprocess
+import os
+import time
+from Actions import getWeather
 intents = json.loads(open('intents.json').read())
 words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
+nlp=spacy.load("en_core_web_lg")
+
+
+
+def doAction(tag,message):
+    doc=nlp(message)
+    if tag=="weather":
+        entities=doc.ents
+        for entity in entities:
+            if entity.label_=="GPE":
+                return getWeather.getWeather(entity.text)
+
+    if tag=="playMusic":
+        subprocess.call("spotify")
+        time.sleep(10)
+        playPause=os.popen("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
+    return ""
 
 
 
@@ -53,69 +77,56 @@ def predict_class(sentence):
         return_list.append({"intent": classes[r[0]], "probability": str(r[1])})
     return return_list
 
-def getResponse(ints, intents_json):
+def getResponse(ints, intents_json,message):
     tag = ints[0]['intent']
     list_of_intents = intents_json['intents']
     for i in list_of_intents:
         if(i['tag']== tag):
             result = random.choice(i['responses'])
+            actionString=doAction(tag,message)
+            result+="\n"+str(actionString)
             #actionString=doAction(tag)
             break
     return result
 
 
-#Creating tkinter GUI
-import tkinter
-from tkinter import *
 
-def send():
-    msg = EntryBox.get("1.0",'end-1c').strip()
-    EntryBox.delete("0.0",END)
+
+def send(msg):
 
     if msg != '':
-        ChatBox.config(state=NORMAL)
-        ChatBox.insert(END, "You: " + msg + '\n\n')
-        ChatBox.config(foreground="#446665", font=("Verdana", 12 ))
-
         ints = predict_class(msg)
-        res = getResponse(ints, intents)
-        ChatBox.insert(END, "Bot: " + res + '\n\n')
-        engine=pyttsx3.init()
-        engine.setProperty('rate', 150)
-        ChatBox.config(state=DISABLED)
-        ChatBox.yview(END)
-        engine.say(res)
-        engine.runAndWait()
+        res = getResponse(ints, intents,msg)
+        return res
 
 
-root = Tk()
-root.title("Chatbot")
-root.geometry("400x500")
-root.resizable(width=TRUE, height=TRUE)
 
-#Create Chat window
-ChatBox = Text(root, bd=0, bg="white", height="8", width="50", font="Arial",)
+print("Anton has started")
+engine=pyttsx3.init()
+engine.setProperty('rate', 150)
+mixer.init()
+mixer.music.load("Sounds/beep.mp3")
+while True:
+    try:
+        rObject=sr.Recognizer()
+        with sr.Microphone() as source:
+            audio=rObject.listen(source,phrase_time_limit=10)
+            text=rObject.recognize_google(audio,language="en-IN")
+            if "Anton" not in text and "anton" not in text:
+                print(text)
+                continue
+            else:
+                mixer.music.play()
+                audio=rObject.listen(source,phrase_time_limit=10)
+                text=rObject.recognize_google(audio,language="en-US")
+                print("YOU: " + text)
+                result=send(text)
+                print("ANTON: "+result)
 
-ChatBox.config(state=DISABLED)
 
-#Bind scrollbar to Chat window
-scrollbar = Scrollbar(root, command=ChatBox.yview, cursor="heart")
-ChatBox['yscrollcommand'] = scrollbar.set
-
-#Create Button to send message
-SendButton = Button(root, font=("Verdana",12,'bold'), text="Send", width="12", height=5,
-                    bd=0, bg="#f9a602", activebackground="#3c9d9b",fg='#000000',
-                    command= send )
-
-#Create the box to enter message
-EntryBox = Text(root, bd=0, bg="white",width="29", height="5", font="Arial")
-#EntryBox.bind("<Return>", send)
-
-
-#Place all components on the screen
-scrollbar.place(x=376,y=6, height=386)
-ChatBox.place(x=6,y=6, height=386, width=370)
-EntryBox.place(x=128, y=401, height=90, width=265)
-SendButton.place(x=6, y=401, height=90)
-
-root.mainloop()
+                engine.say(result)
+                engine.runAndWait()
+    except KeyboardInterrupt:
+        exit()
+    except:
+        continue
