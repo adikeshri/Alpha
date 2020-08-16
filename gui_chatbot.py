@@ -17,7 +17,7 @@ from pygame import mixer
 import subprocess
 import os
 import time
-from Actions import getWeather,getTime,sendTextWhatsapp
+from Actions import getWeather,getTime,sendTextWhatsapp,getNews,calc
 intents = json.loads(open('intents.json').read())
 words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
@@ -34,8 +34,8 @@ def doAction(tag,message):
                 return getWeather.getWeather(entity.text)
 
     if tag=="playMusic":
-        subprocess.call("spotify")
-        time.sleep(10)
+        #subprocess.call("spotify")
+        #time.sleep(10)
         playPause=os.popen("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
     if tag=="time":
         entities=doc.ents
@@ -57,15 +57,19 @@ def doAction(tag,message):
                         index=j
                         break
                     x+=msg[j]+" "
-                    print(x)
                 for j in range(index+1,len(msg)):
                     y+=msg[j]+" "
-                    print(y)
                 x=x.strip()
                 y=y.strip()
                 break
         return sendTextWhatsapp.sendTextWhatsapp(x,y)
 
+    if tag=="news":
+        return getNews.getNews()
+
+    if tag=="calculation":
+
+        return str(calc.calc(message))
     return ""
 
 
@@ -130,9 +134,9 @@ def send(msg):
 
 
 
-print("Anton has started")
+print("Alpha has started")
 engine=pyttsx3.init()
-engine.setProperty('rate', 180)
+engine.setProperty('rate', 170)
 mixer.init()
 mixer.music.load("Sounds/beep.mp3")
 while True:
@@ -141,7 +145,7 @@ while True:
         with sr.Microphone() as source:
             audio=rObject.listen(source,phrase_time_limit=10)
             text=rObject.recognize_google(audio,language="en-US")
-            if "ABC" not in text and "abc" not in text:
+            if "Alpha" not in text and "alpha" not in text:
                 print(text)
                 continue
             else:
@@ -150,7 +154,7 @@ while True:
                 text=rObject.recognize_google(audio,language="en-US")
                 print("YOU: " + text)
                 result=send(text)
-                print("ANTON: "+result)
+                print("Alpha: "+result)
 
 
                 engine.say(result)

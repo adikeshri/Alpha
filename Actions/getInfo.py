@@ -1,5 +1,3 @@
-
-from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
@@ -12,11 +10,8 @@ headers_Get = {
         'Connection': 'keep-alive',
         'Upgrade-Insecure-Requests': '1'
     }
-def getTime(place):
-    if place=="":
-        return datetime.now().strftime("%I:%M %p")
-    q="Time in " + place
-    return google(q)
+def getInfo(entity):
+    return google(entity)
 
 def google(q):
     s = requests.Session()
@@ -25,5 +20,6 @@ def google(q):
     r = s.get(url, headers=headers_Get)
     soup = BeautifulSoup(r.text, "html.parser")
     output = ""
-    output=soup.find("div",{"class":"gsrt vk_bk dDoNo XcVN5d"}).text
+    output=soup.find("div",{"class":"kno-rdesc"}).text
+    output=output[11:]
     return output
