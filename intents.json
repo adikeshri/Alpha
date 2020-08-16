@@ -46,7 +46,6 @@
         "Thanks",
         "Thank you",
         "That's helpful",
-        "Awesome, thanks",
         "Thanks for helping me"
       ],
       "responses": [
@@ -75,13 +74,13 @@
       "tag": "options",
       "patterns": [
         "How you could help me?",
-        "What you can do?",
+        "What can you do?",
         "What help you provide?",
         "How you can be helpful?",
         "What support is offered"
       ],
       "responses": [
-        "I can do a lot of things."
+        "I can do a lot of things. You can ask me about the weather or news, ask me to do calculations send messages and more."
       ],
       "context": [
         ""
@@ -100,23 +99,23 @@
       ]
     },
     {
-      "tag": "anton",
+      "tag": "alpha",
       "patterns": [
         "Who are you?",
         "tell me about yourself",
         "tell me about you",
-        "do you know anton",
-        "who is anton",
+        "do you know alpha",
+        "who is alpha",
         "what is your name",
         "are you an AI",
         "what are you"
       ],
       "responses": [
-        "Hi I'm Anton and i'm an AI created for chatting with humans",
-        "Anton here, a very chatbot in early stages of development",
-        "Anton, chatbot of future",
-        "Yes, I'm Anton",
-        "You can call me Anton"
+        "Hi I'm alpha and i'm an AI created for chatting with humans",
+        "alpha here, a very chatbot in early stages of development",
+        "alpha, chatbot of future",
+        "Yes, I'm alpha",
+        "You can call me alpha"
       ],
       "context_set": ""
     },
@@ -139,9 +138,7 @@
       "tag": "creator",
       "patterns": [
         "Who is your creator?",
-        "who created you",
-        "who is your father",
-        "who is your daddy"
+        "who created you"
       ],
       "responses": [
         "That would be you team Techhub",
@@ -177,7 +174,6 @@
       ],
       "responses": [
         "How do you make holy water? you boil the hell out of it",
-        "what kind of bees make milk instead of honey?Boobies",
         "Did you hear oxygen went on a date with potassium? A: It went OK."
       ],
       "context_set": ""
@@ -267,7 +263,10 @@
         "todays news",
         "top headlines",
         "current news",
-        "news headlines"
+        "news headlines",
+        "Get me the news",
+        "Tell me news",
+        "Give me news updates"
       ],
       "responses": [
         "Getting news ..."
@@ -299,6 +298,25 @@
       "responses": [
         "On it.",
         "Okay"
+      ],
+      "context": [
+        ""
+      ]
+    },
+    {
+      "tag": "calculation",
+      "patterns": [
+        "9 + 90",
+        "12 - 22",
+        "99 X 100",
+        "85/72",
+        "100 plus 28",
+        "71 multiplied by 99",
+        "100 divided by 1",
+        "200 minus 101"
+      ],
+      "responses": [
+        ""
       ],
       "context": [
         ""

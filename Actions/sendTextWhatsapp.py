@@ -9,8 +9,6 @@ import sys
 from selenium.webdriver.chrome.options import Options
 
 def sendTextWhatsapp(to,message):
-    print(to)
-    print(message)
     try:
         options = Options()
         options.add_argument("user-data-dir=/home/adi/.config/google-chrome/Default")
@@ -38,4 +36,4 @@ def sendTextWhatsapp(to,message):
         driver.close()
     except:
         return "Could not send the message."
-    return "Message sent to " + to + " on whatsapp saying " + message
+    return "Sent"
