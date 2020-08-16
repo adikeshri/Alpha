@@ -273,6 +273,36 @@
         "Getting news ..."
       ],
       "context_set": "news"
+    },
+    {
+      "tag": "time",
+      "patterns": [
+        "What time is it",
+        "What is the time",
+        "What's the time",
+        "What is the time in India",
+        "What's the time in Bangalore"
+      ],
+      "responses": [
+        ""
+      ],
+      "context_set": "wikipedia"
+    },
+    {
+      "tag": "text",
+      "patterns": [
+        "Send a text to",
+        "Send a text message to",
+        "Send a text to",
+        "Send a message to"
+      ],
+      "responses": [
+        "On it.",
+        "Okay"
+      ],
+      "context": [
+        ""
+      ]
     }
   ]
 }

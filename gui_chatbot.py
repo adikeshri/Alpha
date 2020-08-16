@@ -17,7 +17,7 @@ from pygame import mixer
 import subprocess
 import os
 import time
-from Actions import getWeather
+from Actions import getWeather,getTime,sendTextWhatsapp
 intents = json.loads(open('intents.json').read())
 words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
@@ -37,6 +37,35 @@ def doAction(tag,message):
         subprocess.call("spotify")
         time.sleep(10)
         playPause=os.popen("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
+    if tag=="time":
+        entities=doc.ents
+        for entity in entities:
+            if entity.label_=="GPE":
+                t=getTime.getTime(entity.text)
+                return ("It's " + t + " in "+entity.text)
+        return getTime.getTime("")
+
+    if tag=="text":
+        msg=message.split()
+        x=""
+        y=""
+        for i in range(len(msg)):
+            if msg[i]=="to":
+                index=-1
+                for j in range(i+1,len(msg)):
+                    if msg[j]=="saying":
+                        index=j
+                        break
+                    x+=msg[j]+" "
+                    print(x)
+                for j in range(index+1,len(msg)):
+                    y+=msg[j]+" "
+                    print(y)
+                x=x.strip()
+                y=y.strip()
+                break
+        return sendTextWhatsapp.sendTextWhatsapp(x,y)
+
     return ""
 
 
@@ -103,7 +132,7 @@ def send(msg):
 
 print("Anton has started")
 engine=pyttsx3.init()
-engine.setProperty('rate', 150)
+engine.setProperty('rate', 180)
 mixer.init()
 mixer.music.load("Sounds/beep.mp3")
 while True:
@@ -111,8 +140,8 @@ while True:
         rObject=sr.Recognizer()
         with sr.Microphone() as source:
             audio=rObject.listen(source,phrase_time_limit=10)
-            text=rObject.recognize_google(audio,language="en-IN")
-            if "Anton" not in text and "anton" not in text:
+            text=rObject.recognize_google(audio,language="en-US")
+            if "ABC" not in text and "abc" not in text:
                 print(text)
                 continue
             else:

@@ -1,0 +1,2 @@
+selpath : /home/adi/Downloads/chromedriver
+--------------------
