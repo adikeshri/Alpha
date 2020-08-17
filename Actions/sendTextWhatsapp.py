@@ -22,7 +22,7 @@ def sendTextWhatsapp(to,message):
         # Replace 'My Bsnl' with the name of your friend or group name
         target = '"'+to+'"'
         # Replace the below string with your own message
-        string = message+" "+"[Sent via Anton]"
+        string = message+" "+"[Sent via Alpha]"
 
         x_arg = '//span[contains(@title,' + target + ')]'
         group_title = wait.until(EC.presence_of_element_located((
