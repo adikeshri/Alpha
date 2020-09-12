@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 
 def sendTextWhatsapp(to,message):
     try:
+
         options = Options()
         options.add_argument("user-data-dir=/home/adi/.config/google-chrome/Default")
         # Replace below path with the absolute path of the \
